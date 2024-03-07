@@ -1,0 +1,844 @@
+openapi: "3.0.3"
+info:
+  title: "Restaurant API"
+  description: "API for managing users, orders, positions, reviews, and dishes in a restaurant"
+  version: "1.0.0"
+servers:
+  - url: "http://127.0.0.1:8080"
+tags:
+  - name: "user"
+    description: "Operations related to user management"
+  - name: "order"
+    description: "Operations related to order management"
+  - name: "position"
+    description: "Operations related to position management"
+  - name: "review"
+    description: "Operations related to review management"
+  - name: "stats"
+    description: "Operations related to statistics"
+  - name: "dish"
+    description: "Operations related to dish management"
+
+paths:
+  /user/register:
+    post:
+      description: "User registration"
+      tags:
+        - "user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /user/login:
+    post:
+      description: "User authentication"
+      tags:
+        - "user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /user/getByLogin:
+    post:
+      description: "Retrieve user by login"
+      tags:
+        - "user"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetUserByLoginRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExposedUser"
+
+  /order/add:
+    post:
+      description: "Add a new order"
+      tags:
+        - "order"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddOrderRequest"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /order/getOrderById:
+    post:
+      description: "Get order by ID"
+      tags:
+        - "order"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetOrderByIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExposedOrder"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /order/pay:
+    post:
+      description: "Pay for an order"
+      tags:
+        - "order"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PayOrderByIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /order/cancel:
+    post:
+      description: "Cancel an order"
+      tags:
+        - "order"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CancelOrderByIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /order/updateOrderStatusById:
+    post:
+      description: "Update order status by ID"
+      tags:
+        - "order"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOrderStatusByIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /order/deleteAllCanceledOrders:
+    post:
+      description: "Delete all canceled orders"
+      tags:
+        - "order"
+      security:
+        - bearerAuth: [ ]
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /order/deleteByCustomerId:
+    post:
+      description: "Delete orders by customer ID"
+      tags:
+        - "order"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteOrderByCustomerIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /order/deleteById:
+    post:
+      description: "Delete order by ID"
+      tags:
+        - "order"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteOrderByIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+
+  /position/add:
+    post:
+      description: "Add a new position to an order"
+      tags:
+        - "position"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddPositionRequest"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /position/getAllPositionsByOrderId:
+    post:
+      description: "Get all positions for an order"
+      tags:
+        - "position"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetAllPositionsByOrderIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ExposedPosition"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /position/deleteById:
+    post:
+      description: "Delete position by ID"
+      tags:
+        - "position"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeletePositionByIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /position/deleteByOrderId:
+    post:
+      description: "Delete positions by order ID"
+      tags:
+        - "position"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteOrderByIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /review/add:
+    post:
+      description: "Add a new review"
+      tags:
+        - "review"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddReviewRequest"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /review/deleteById:
+    post:
+      description: "Delete review by ID"
+      tags:
+        - "review"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteReviewByIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /review/deleteByUserId:
+    post:
+      description: "Delete reviews by user ID"
+      tags:
+        - "review"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteReviewByUserIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /review/update:
+    post:
+      description: "Update review"
+      tags:
+        - "review"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateReviewRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /stats/getMostPopularDishes:
+    post:
+      description: "Get most popular dishes"
+      tags:
+        - "stats"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetMostPopularDishesRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ExposedDish"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /dish/add:
+    post:
+      description: "Add a new dish"
+      tags:
+        - "dish"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddDishRequest"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /dish/deleteById:
+    post:
+      description: "Delete dish by ID"
+      tags:
+        - "dish"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteDishByIdRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /dish/deleteByName:
+    post:
+      description: "Delete dish by name"
+      tags:
+        - "dish"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeleteDishByNameRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+  /dish/update:
+    post:
+      description: "Update dish"
+      tags:
+        - "dish"
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateDishRequest"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+        "400":
+          description: "Bad Request"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          minLength: 1
+          maxLength: 100
+        password:
+          type: string
+          minLength: 6
+          maxLength: 100
+    RegisterRequest:
+      type: object
+      required:
+        - login
+        - password
+        - role
+      properties:
+        login:
+          type: string
+          minLength: 1
+          maxLength: 100
+        password:
+          type: string
+          minLength: 6
+          maxLength: 100
+        role:
+          type: string
+          enum:
+            - "ADMIN"
+            - "USER"
+    AddOrderRequest:
+      type: "object"
+      properties:
+        customerId:
+          type: "string"
+      required:
+        - customerId
+    GetOrderByIdRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+      required:
+        - id
+    PayOrderByIdRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        paymentSum:
+          type: "number"
+      required:
+        - id
+        - paymentSum
+    CancelOrderByIdRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+      required:
+        - id
+    UpdateOrderStatusByIdRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        status:
+          type: "string"
+      required:
+        - id
+        - status
+    DeleteOrderByCustomerIdRequest:
+      type: "object"
+      properties:
+        customerId:
+          type: "string"
+      required:
+        - customerId
+    DeleteOrderByIdRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+      required:
+        - id
+    AddPositionRequest:
+      type: "object"
+      properties:
+        orderId:
+          type: "string"
+        dishId:
+          type: "string"
+      required:
+        - orderId
+        - dishId
+    GetAllPositionsByOrderIdRequest:
+      type: "object"
+      properties:
+        orderId:
+          type: "string"
+      required:
+        - orderId
+    DeletePositionByIdRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+      required:
+        - id
+    DeleteOrderByOrderIdRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+      required:
+        - id
+    AddReviewRequest:
+      type: "object"
+      properties:
+        userId:
+          type: "string"
+        rating:
+          type: "integer"
+        comment:
+          type: "string"
+      required:
+        - userId
+        - rating
+        - comment
+    DeleteReviewByIdRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+      required:
+        - id
+    DeleteReviewByUserIdRequest:
+      type: "object"
+      properties:
+        userId:
+          type: "string"
+      required:
+        - userId
+    UpdateReviewRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        userId:
+          type: "string"
+        rating:
+          type: "integer"
+        comment:
+          type: "string"
+      required:
+        - id
+        - userId
+        - rating
+        - comment
+    GetMostPopularDishesRequest:
+      type: "object"
+      properties:
+        count:
+          type: "integer"
+      required:
+        - count
+    AddDishRequest:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+        quantity:
+          type: "integer"
+        price:
+          type: "number"
+        cookMinutes:
+          type: "integer"
+      required:
+        - name
+        - quantity
+        - price
+        - cookMinutes
+    DeleteDishByIdRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+      required:
+        - id
+    DeleteDishByNameRequest:
+      type: "object"
+      properties:
+        name:
+          type: "string"
+      required:
+        - name
+    UpdateDishRequest:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+        quantity:
+          type: "integer"
+        price:
+          type: "number"
+        cookMinutes:
+          type: "integer"
+      required:
+        - id
+        - name
+        - quantity
+        - price
+        - cookMinutes
+  securitySchemes:
+    bearerAuth:
+      type: "http"
+      scheme: "bearer"
